@@ -14,13 +14,12 @@ def home():
     if "user_id" not in session : 
         return redirect(url_for("login"))
     greet_text = f"Welcome {session['username']}!"
-    return render_template("home.htmo", msg=greet_text)
+    return render_template("home.html", msg=greet_text)
 
 @app.route('/register' , methods=['GET','POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        email = request.form['email']
         password = request.form['password']
 
         if User.query.filter_by(username=username).first():
