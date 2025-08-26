@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Login Page{% endblock  %}
+
+{% block content %}
+    <header class="h-30 bg-white flex items-center justify-center ">
+        <h1 class="text-3xl text-amber underline">FINANCE TRACKER 2.0</h1>
+    </header>
+
+    <main class="h-100 w-full flex items-center justify-center">
+        <section class="border-2 h-80 w-100 flex flex-col items-center rounded-2xl shadow-2xl">
+            <form class="flex flex-col items-center justify-center">
+                <input  class="h-15 w-80 border-b-2 outline-none pl-2 mt-4 text-2xl shadow-2xl" type="text" name="username" placeholder="Username" required="required"><br>
+               
+                <input class="h-15 w-80  border-b-2 outline-none pl-2 mt-4 text-2xl shadow-2xl" type="text" name="password" placeholder="Password" required="required"><br>
+
+                <button class="bg-blue-700 h-10 w-30 rounded-xl text-lg cursor-pointer hover:bg-amber-50 ">LOGIN</button><br>
+            </form>
+
+            <p>Dont have an account ? <a href="{{url_for('register')}}" class="underline text-blue-950 text-xl">Register</a></p>
+        </section>
+    </main>
+{% endblock  %}

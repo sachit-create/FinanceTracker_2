@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}base page{% endblock  %}</title>
+    <link rel="stylesheet" href="./static/src/output.css">
+</head>
+<body class="h-full w-full bg-gradient-to-r from-blue-500 to-purple-500">
+    {% block content %}
+        <h1 class="bg-amber-700" >Hello this project is started</h1>
+    {% endblock  %}
+</body>
+</html>
