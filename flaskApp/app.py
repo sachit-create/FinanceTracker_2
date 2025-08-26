@@ -1,35 +1,64 @@
-from flask import Flask, redirect , url_for
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask , render_template , request , redirect , url_for , session , flash
 from flask_migrate import Migrate
-from flask_login import LoginManager
-from flask_bcrypt import Bcrypt
+from models import db , User
 
-db = SQLAlchemy()
+app = Flask(__name__)
 
-def create_app():
-    app = Flask(__name__,template_folder='templates')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./testdb.db'
-    app.secret_key = "SOME KEY"
-    db.init_app(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///finance.db'
+app.config['SECRET_KEY'] = 'VERY_SECRET_KEY'
+db.init_app(app)
+migrate = Migrate(app,db)
 
-    login_manager = LoginManager()
-    login_manager.init_app(app)
+@app.route('/')
+def home():
+    if "user_id" not in session : 
+        return redirect(url_for("login"))
+    greet_text = f"Welcome {session['username']}!"
+    return render_template("home.htmo", msg=greet_text)
 
-    from models import User
+@app.route('/register' , methods=['GET','POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
 
-    @login_manager.user_loader
-    def load_user(uid):
-        return User.query.get(uid)
+        if User.query.filter_by(username=username).first():
+            flash("username already registered")
+            return redirect(url_for("register"))
+        
     
-    @login_manager.unauthorized_handler
-    def unauthorized_callback():
-        return redirect(url_for('index'))
+        new_user = User(username=username)
+        new_user.set_password(password)
+        db.session.add(new_user)
+        db.session.commit()
 
-    bcrypt = Bcrypt(app)
+        flash("Registration sucessful! Please login.")
+        return redirect(url_for("login"))
+    
+    return render_template('register.html')
 
-    from routes import register_routes
-    register_routes(app,db,bcrypt)
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
 
-    migrate = Migrate(app,db)
+        user = User.query.filter_by(username=username).first()
+        if user and user.check_password(password):
+            session['user_id'] = user.uid
+            session['username'] = user.username
+            return redirect(url_for("home"))
+        else:
+            flash("Invalid username or password")
+        
+    return render_template('login.html')
 
-    return app
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+if __name__=='__main__':
+    app.run(host='0.0.0.0',debug=True)
