@@ -13,8 +13,7 @@ migrate = Migrate(app,db)
 def home():
     if "user_id" not in session : 
         return redirect(url_for("login"))
-    greet_text = f"Welcome {session['username']}!"
-    return render_template("home.html", msg=greet_text)
+    return render_template("home.html", msg=str(session['username']).capitalize())
 
 @app.route('/register' , methods=['GET','POST'])
 def register():
@@ -58,6 +57,10 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for("login"))
+
+@app.route('/addtrac')
+def addtrac():
+    return render_template('tracform.html')
 
 if __name__=='__main__':
     app.run(host='0.0.0.0',debug=True)

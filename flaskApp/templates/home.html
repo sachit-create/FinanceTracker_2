@@ -1,9 +1,48 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block title %}Home Page{% endblock %} {% block
+content %}
+<header
+  class="bg-black h-32 w-full flex items-center justify-between text-white min-w-[360px]"
+>
+  <div class="h-full w-1/2 flex items-center justify-start">
+    <h1 class="ml-10 text-4xl text-blue-700">Hello,</h1>
+    <h2 class="text-3xl text-pink-400">&nbsp;{{msg}} !</h2>
+  </div>
+  <nav class="h-full w-1/2 flex items-center justify-around text-xl">
+    <a
+      class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600"
+      href="{{url_for('addtrac')}}"
+      >Add Transaction</a
+    >
+    <a class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600" href=""
+      >Budget</a
+    >
+    <a
+      class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600"
+      href="{{url_for('logout')}}"
+      >Logout</a
+    >
+    <a class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600" href=""
+      >Setting</a
+    >
+  </nav>
+</header>
 
-{% block title %}Home Page{% endblock  %}
 
-{% block content %}
-     <h1>{{msg}}</h1>
+<main class="h-115 w-full grid grid-cols-2 grid-rows-3 gap-2 text-white min-w-[360px] bg-no-repeat"> 
+      
+      <section class="col-span-2 row-span-1 flex items-center justify-center">01</section>
+      <!--recent 5 transactions-->
+      <section class="col-span-1 row-span-2 flex items-center justify-center">
+            02
+      </section>
+      <!--Charts-->
+      <section class="col-span-1 row-span-2 flex items-center justify-center">
+            03
+      </section>
+</main>
 
-     <a class="underline" href="{{url_for('logout')}}">Logout</a>
-{% endblock  %}
+<footer class="bg-black w-full h-13.5 text-white flex items-center justify-around min-w-[360px]">
+      <h1 class="border-l-4 border-l-gray-300 pl-2">@Sachit-Create-Coorporation</h1>
+      <h1 class="border-l-4 border-l-gray-300 pl-2">&copy; All Rights Reserved</h1>
+</footer>
+{% endblock %}
