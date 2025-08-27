@@ -4,6 +4,7 @@
  - # Includes 
     - All essential features of finance tracker
     - Also added user login feature to shwo information according to user
+    - Home page with summary , resent transactions and charts
 
 # Tech Stack
  > you can also see requirements.txt
