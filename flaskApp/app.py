@@ -1,7 +1,6 @@
 from flask import Flask , render_template , request , redirect , url_for , session , flash
 from flask_migrate import Migrate
 from models import db , User , Transaction
-from flask_login import login_required , current_user
 
 app = Flask(__name__)
 
@@ -14,7 +13,8 @@ migrate = Migrate(app,db)
 def home():
     if "user_id" not in session : 
         return redirect(url_for("login"))
-    return render_template("home.html", msg=str(session['username']).capitalize())
+    recent_5 = Transaction.query.filter_by(uid=int(session['user_id'])).limit(5).all()
+    return render_template("home.html", msg=str(session['username']).capitalize(),recent_5=recent_5)
 
 @app.route('/register' , methods=['GET','POST'])
 def register():
@@ -60,15 +60,14 @@ def logout():
     return redirect(url_for("login"))
 
 @app.route('/addtrac', methods=['GET', 'POST'])
-@login_required
-def add_trac():
+def addtrac():
     if request.method == 'POST':
         amount = request.form['amount']
         t_type = request.form['type']
         desc = request.form['description']
 
         txn = Transaction(
-            uid=current_user.uid,  
+            uid=int(session['user_id']),  
             amount=amount,
             type=t_type,
             description=desc
@@ -76,9 +75,13 @@ def add_trac():
         db.session.add(txn)
         db.session.commit()
 
-        return redirect(url_for('home')) 
-
+        return redirect(url_for('transactions')) 
     return render_template('tracform.html')
+
+@app.route('/transactions')
+def transactions():
+    transactions = Transaction.query.filter_by(uid=int(session['user_id'])).all()
+    return render_template('transactions.html', transactions=transactions)
 
 if __name__=='__main__':
     app.run(host='0.0.0.0',debug=True)

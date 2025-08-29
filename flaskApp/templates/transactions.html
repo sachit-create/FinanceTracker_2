@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block title %}Transactions{% endblock %} {% block
+content %}
+<h2>Your Transactions</h2>
+<ul>
+  {% for txn in transactions %}
+  <li>
+    {{ txn.type.upper() }} - {{ txn.amount }} - {{ txn.description.upper() }} - {{
+    txn.created_at }}
+  </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

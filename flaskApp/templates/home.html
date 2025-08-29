@@ -13,8 +13,8 @@ content %}
       href="{{url_for('addtrac')}}"
       >Add Transaction</a
     >
-    <a class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600" href=""
-      >Budget</a
+    <a class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600" href="{{url_for('transactions')}}"
+      >Transactions</a
     >
     <a
       class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600"
@@ -41,6 +41,11 @@ content %}
       <section class="col-span-1 row-span-2 flex items-center justify-center">
             <div class="h-70 w-140 bg-black rounded-lg flex flex-col items-center">
               <p class="text-2xl mt-2">RECENT TRANSACTIONS</p>
+              <ul>
+                {% for ele in recent_5%}
+                  <li> {{ ele.type.upper() }} - {{ ele.amount }} - {{ ele.description.upper() }} </li>
+                {% endfor %}
+              </ul>
             </div>
       </section>
       <!--Charts-->
