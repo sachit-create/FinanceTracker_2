@@ -29,15 +29,25 @@ content %}
 
 
 <main class="h-115 w-full grid grid-cols-2 grid-rows-3 gap-2 text-white min-w-[360px] bg-no-repeat"> 
-      
-      <section class="col-span-2 row-span-1 flex items-center justify-center">01</section>
+      <!--summary area-->
+      <section class="col-span-2 row-span-1 flex items-center justify-center">
+        <div class="h-20 w-300 bg-gradient-to-r from-black to-gray-600 rounded-full flex items-center justify-around">
+          <div class="w-100"><p class="text-blue-700 text-2xl ml-10">Budget : {{30}}</p></div>
+          <div class="w-100"><p class="text-pink-400 text-4xl mb-2 ml-10">Balance : {{0}}</p></div>
+          <div class="w-100"><p class="text-blue-700 text-2xl ml-20">Expense : {{0}}</p></div>
+        </div>
+      </section>
       <!--recent 5 transactions-->
       <section class="col-span-1 row-span-2 flex items-center justify-center">
-            02
+            <div class="h-70 w-140 bg-black rounded-lg flex flex-col items-center">
+              <p class="text-2xl mt-2">RECENT TRANSACTIONS</p>
+            </div>
       </section>
       <!--Charts-->
       <section class="col-span-1 row-span-2 flex items-center justify-center">
-            03
+            <div class="h-70 w-140 bg-black rounded-lg">
+              <!--Visuals here-->
+            </div>
       </section>
 </main>
 

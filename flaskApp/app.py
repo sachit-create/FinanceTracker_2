@@ -1,6 +1,7 @@
 from flask import Flask , render_template , request , redirect , url_for , session , flash
 from flask_migrate import Migrate
-from models import db , User
+from models import db , User , Transaction
+from flask_login import login_required , current_user
 
 app = Flask(__name__)
 
@@ -58,8 +59,25 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-@app.route('/addtrac')
-def addtrac():
+@app.route('/addtrac', methods=['GET', 'POST'])
+@login_required
+def add_trac():
+    if request.method == 'POST':
+        amount = request.form['amount']
+        t_type = request.form['type']
+        desc = request.form['description']
+
+        txn = Transaction(
+            uid=current_user.uid,  
+            amount=amount,
+            type=t_type,
+            description=desc
+        )
+        db.session.add(txn)
+        db.session.commit()
+
+        return redirect(url_for('home')) 
+
     return render_template('tracform.html')
 
 if __name__=='__main__':
