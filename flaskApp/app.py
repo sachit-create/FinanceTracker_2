@@ -1,7 +1,6 @@
 from flask import Flask , render_template , request , redirect , url_for , session , flash
 from flask_migrate import Migrate
 from models import db , User , Transaction
-
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///finance.db'
