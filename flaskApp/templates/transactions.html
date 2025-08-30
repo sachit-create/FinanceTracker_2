@@ -1,11 +1,47 @@
 {% extends "base.html" %} {% block title %}Transactions{% endblock %} {% block
 content %}
-<h2>Your Transactions</h2>
-<ul>
+<h2
+  class="bg-black text-white h-20 w-full flex items-center justify-around text-3xl"
+>
+  Your Transactions
+</h2>
+<ul
+  class="border-2 border-black h-auto w-full flex flex-col items-center justify-start"
+>
+  <li
+    class="h-10 w-full flex items-center gap-5 justify-around border-b-2 text-xl bg-white"
+  >
+    <div class="h-full flex items-center w-1/5 justify-center">TYPE</div>
+    <div class="h-full flex items-center w-1/5 justify-start">AMOUNT</div>
+    <div class="h-full flex items-center w-1/5 justify-start">DESCRIPTION</div>
+    <div class="h-full flex items-center w-1/5 justify-center">DATE</div>
+    <div class="h-full flex items-center w-1/5 justify-center">ACTIONS</div>
+  </li>
   {% for txn in transactions %}
-  <li>
-    {{ txn.type.upper() }} - {{ txn.amount }} - {{ txn.description.upper() }} - {{
-    txn.created_at }}
+  <li class="h-10 w-full flex items-center gap-5 justify-around text-lg border-b-2 border-white">
+    {% if txn.type == "credit" %}
+    <div class="h-full flex items-center w-1/5 justify-center text-green-800 text-xl">
+      {{ txn.type.upper() }}
+    </div>
+    {% else %}
+    <div class="h-full flex items-center w-1/5 justify-center text-red-800 text-xl">
+      {{ txn.type.upper() }}
+    </div>
+    {% endif %}
+    <div class="h-full flex items-center w-1/5 justify-start">
+      &#8377;{{ txn.amount }}
+    </div>
+    <div class="h-full flex items-center w-1/5 justify-start">
+      {{ txn.description.upper() }}
+    </div>
+    <div class="h-full flex items-center w-1/5 justify-center">
+      {{ txn.created_at.date() }}
+    </div>
+
+    <div class="h-full w-1/5 flex items-center justify-around">
+      <button class="bg-blue-600 border-none p-0.5 rounded-lg cursor-pointer hover:bg-blue-500 focus:bg-white">EDIT</button> 
+      <button class="bg-red-600 border-none p-0.5 rounded-lg cursor-pointer hover:bg-red-500 focus:bg-white">DELETE</button>
+    </div>
   </li>
   {% endfor %}
 </ul>

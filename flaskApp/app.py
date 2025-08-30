@@ -12,7 +12,13 @@ migrate = Migrate(app,db)
 def home():
     if "user_id" not in session : 
         return redirect(url_for("login"))
-    recent_5 = Transaction.query.filter_by(uid=int(session['user_id'])).limit(5).all()
+    recent_5 = (
+        Transaction.query
+        .filter_by(uid=int(session['user_id']))
+        .order_by(Transaction.created_at.desc())  
+        .limit(5)
+        .all()
+    )
     return render_template("home.html", msg=str(session['username']).capitalize(),recent_5=recent_5)
 
 @app.route('/register' , methods=['GET','POST'])

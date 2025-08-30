@@ -43,7 +43,7 @@ content %}
               <p class="text-2xl mt-2">RECENT TRANSACTIONS</p>
               <ul>
                 {% for ele in recent_5%}
-                  <li> {{ ele.type.upper() }} - {{ ele.amount }} - {{ ele.description.upper() }} </li>
+                  <li> {{ ele.type.upper() }} - &#8377;{{ ele.amount }} - {{ ele.description.upper() }} </li>
                 {% endfor %}
               </ul>
             </div>
