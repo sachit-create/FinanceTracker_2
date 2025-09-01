@@ -6,8 +6,7 @@
   - All essential features of finance tracker
   - Also added user login feature to shwo information according to user
   - Home page with summary , resent transactions and charts
-  - Transactions page to show and update them and also 
-  a form to add a transactions
+  - Transactions page to show , update , search them and also a form to add a transactions
   - ```Also a Visualization box to get graph based summary and analytics page link to it.``` 
 # Tech Stack
 
