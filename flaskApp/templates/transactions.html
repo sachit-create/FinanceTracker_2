@@ -5,6 +5,22 @@ content %}
 >
   Your Transactions
 </h2>
+<div class="bg-black text-white h-15 w-full flex items-center justify-around text-3xl border-t-2">
+  <input type="text" name="description" placeholder="Description">
+
+  <select name="type">
+    <option value="all">ALL</option>
+    <option value="credit">CREDIT</option>
+    <option value="debit">DEBIT</option>
+  </select>
+
+  <input type="date" name="date">
+
+   <a
+  class="text-white border-b-2 border-black transition duration-150 hover:border-pink-600"
+  href="{{url_for('home')}}"
+  >Home</a>
+</div>
 <ul
   class="border-2 border-black h-auto w-full flex flex-col items-center justify-start"
 >
@@ -18,29 +34,49 @@ content %}
     <div class="h-full flex items-center w-1/5 justify-center">ACTIONS</div>
   </li>
   {% for txn in transactions %}
-  <li class="h-10 w-full flex items-center gap-5 justify-around text-lg border-b-2 border-white">
+  <li
+    class="h-10 w-full flex items-center gap-5 justify-around text-lg border-b-2 border-white"
+  >
     {% if txn.type == "credit" %}
-    <div class="h-full flex items-center w-1/5 justify-center text-green-800 text-xl">
+    <div
+      class="h-full flex items-center w-1/5 justify-center text-green-800 text-xl"
+    >
       {{ txn.type.upper() }}
     </div>
     {% else %}
-    <div class="h-full flex items-center w-1/5 justify-center text-red-800 text-xl">
+    <div
+      class="h-full flex items-center w-1/5 justify-center text-red-800 text-xl"
+    >
       {{ txn.type.upper() }}
     </div>
     {% endif %}
     <div class="h-full flex items-center w-1/5 justify-start">
       &#8377;{{ txn.amount }}
     </div>
+    {% if txn.description|length <= 15 %}
     <div class="h-full flex items-center w-1/5 justify-start">
       {{ txn.description.upper() }}
     </div>
+    {% else %}
+    <div class="h-full flex items-center w-1/5 justify-start">
+      {{ txn.description.upper()[0:16] }}...
+    </div>
+    {% endif %}
     <div class="h-full flex items-center w-1/5 justify-center">
       {{ txn.created_at.date() }}
     </div>
 
     <div class="h-full w-1/5 flex items-center justify-around">
-      <button class="bg-blue-600 border-none p-0.5 rounded-lg cursor-pointer hover:bg-blue-500 focus:bg-white">EDIT</button> 
-      <button class="bg-red-600 border-none p-0.5 rounded-lg cursor-pointer hover:bg-red-500 focus:bg-white">DELETE</button>
+      <button
+        class="bg-blue-600 border-none p-0.5 rounded-lg cursor-pointer hover:bg-blue-500 focus:bg-white"
+      >
+        EDIT
+      </button>
+      <button
+        class="bg-red-600 border-none p-0.5 rounded-lg cursor-pointer hover:bg-red-500 focus:bg-white"
+      >
+        DELETE
+      </button>
     </div>
   </li>
   {% endfor %}

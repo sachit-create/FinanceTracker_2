@@ -15,7 +15,7 @@ def home():
     recent_5 = (
         Transaction.query
         .filter_by(uid=int(session['user_id']))
-        .order_by(Transaction.created_at.desc())  
+        .order_by(Transaction.tid.desc())  
         .limit(5)
         .all()
     )

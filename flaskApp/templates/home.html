@@ -13,7 +13,9 @@ content %}
       href="{{url_for('addtrac')}}"
       >Add Transaction</a
     >
-    <a class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600" href="{{url_for('transactions')}}"
+    <a
+      class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600"
+      href="{{url_for('transactions')}}"
       >Transactions</a
     >
     <a
@@ -21,43 +23,79 @@ content %}
       href="{{url_for('logout')}}"
       >Logout</a
     >
-    <a class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600" href=""
+    <a
+      class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600"
+      href=""
       >Setting</a
     >
   </nav>
 </header>
 
-
-<main class="h-115 w-full grid grid-cols-2 grid-rows-3 gap-2 text-white min-w-[360px] bg-no-repeat"> 
-      <!--summary area-->
-      <section class="col-span-2 row-span-1 flex items-center justify-center">
-        <div class="h-20 w-300 bg-gradient-to-r from-black to-gray-600 rounded-full flex items-center justify-around">
-          <div class="w-100"><p class="text-blue-700 text-2xl ml-10">Budget : {{30}}</p></div>
-          <div class="w-100"><p class="text-pink-400 text-4xl mb-2 ml-10">Balance : {{0}}</p></div>
-          <div class="w-100"><p class="text-blue-700 text-2xl ml-20">Expense : {{0}}</p></div>
-        </div>
-      </section>
-      <!--recent 5 transactions-->
-      <section class="col-span-1 row-span-2 flex items-center justify-center">
-            <div class="h-70 w-140 bg-black rounded-lg flex flex-col items-center">
-              <p class="text-2xl mt-2">RECENT TRANSACTIONS</p>
-              <ul>
-                {% for ele in recent_5%}
-                  <li> {{ ele.type.upper() }} - &#8377;{{ ele.amount }} - {{ ele.description.upper() }} </li>
-                {% endfor %}
-              </ul>
-            </div>
-      </section>
-      <!--Charts-->
-      <section class="col-span-1 row-span-2 flex items-center justify-center">
-            <div class="h-70 w-140 bg-black rounded-lg">
-              <!--Visuals here-->
-            </div>
-      </section>
+<main
+  class="h-115 w-full grid grid-cols-2 grid-rows-3 gap-2 text-white min-w-[360px] bg-no-repeat"
+>
+  <!--summary area-->
+  <section class="col-span-2 row-span-1 flex items-center justify-center">
+    <div
+      class="h-20 w-300 bg-gradient-to-r from-black to-gray-600 rounded-full flex items-center justify-around"
+    >
+      <div class="w-100">
+        <p class="text-blue-700 text-2xl ml-10">Budget : {{30}}</p>
+      </div>
+      <div class="w-100">
+        <p class="text-pink-400 text-4xl mb-2 ml-10">Balance : {{0}}</p>
+      </div>
+      <div class="w-100">
+        <p class="text-blue-700 text-2xl ml-20">Expense : {{0}}</p>
+      </div>
+    </div>
+  </section>
+  <!--recent 5 transactions-->
+  <section class="col-span-1 row-span-2 flex items-center justify-center">
+    <div class="h-70 w-140 bg-black rounded-lg flex flex-col items-center">
+      <p class="text-2xl mt-2">RECENT TRANSACTIONS</p>
+      <ul class="h-70 w-140 flex flex-col justify-start items-center">
+        <li
+          class="h-10 w-full flex items-center justify-around border-b-2 border-t-2 border-white text-2xl"
+        >
+          <div class="w-1/3 flex items-center justify-center">Type</div>
+          <div class="w-1/3">Description</div>
+          <div class="w-1/3">Amount</div>
+        </li>
+        {% for ele in recent_5%}
+        <li
+          class="h-10 w-full flex items-center justify-around border-b-2 border-white"
+        >
+          <div class="w-1/3 flex items-center justify-center">
+            {% if ele.type == "credit" %}
+            <div class="text-green-500">{{ele.type.upper()}}</div>
+            {% else %}
+            <div class="text-red-500">{{ele.type.upper()}}</div>
+            {% endif %}
+          </div>
+          {% if ele.description|length <= 15 %}
+          <div class="w-1/3">{{ ele.description.upper() }}</div>
+          {% else %}
+          <div class="w-1/3">{{ ele.description.upper()[0:16] }}...</div>
+          {% endif %}
+          <div class="w-1/3">&#8377;{{ ele.amount }}</div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+  <!--Charts-->
+  <section class="col-span-1 row-span-2 flex items-center justify-center">
+    <div class="h-70 w-140 bg-black rounded-lg">
+      <!--Visuals here-->
+    </div>
+  </section>
 </main>
 
-<footer class="bg-black w-full h-13.5 text-white flex items-center justify-around min-w-[360px]">
-      <h1 class="border-l-4 border-l-gray-300 pl-2">@Sachit-Create-Coorporation</h1>
-      <h1 class="border-l-4 border-l-gray-300 pl-2">&copy; All Rights Reserved</h1>
+<footer
+  class="bg-black w-full h-13.5 text-white flex items-center justify-around min-w-[360px]"
+>
+  <h1 class="border-l-4 border-l-gray-300 pl-2">@Sachit-Create-Coorporation</h1>
+  <h1 class="border-l-4 border-l-gray-300 pl-2">&copy; All Rights Reserved</h1>
 </footer>
 {% endblock %}
