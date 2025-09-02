@@ -1,6 +1,8 @@
 from flask import Flask , render_template , request , redirect , url_for , session , flash
 from flask_migrate import Migrate
 from models import db , User , Transaction
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///finance.db'
@@ -19,7 +21,18 @@ def home():
         .limit(5)
         .all()
     )
-    return render_template("home.html", msg=str(session['username']).capitalize(),recent_5=recent_5)
+
+    uid = int(session['user_id'])
+    transactions = Transaction.query.filter_by(uid=uid).all()
+
+    income = db.session.query(func.sum(Transaction.amount)).filter_by(uid=uid, type="credit").scalar() or 0
+
+    expense = db.session.query(func.sum(Transaction.amount)).filter_by(uid=uid, type="debit").scalar() or 0
+
+    balance = income - expense
+
+    return render_template("home.html", msg=str(session['username']).capitalize(),recent_5=recent_5,
+    income=income,balance=balance,expense=expense)
 
 @app.route('/register' , methods=['GET','POST'])
 def register():
@@ -87,6 +100,13 @@ def addtrac():
 def transactions():
     transactions = Transaction.query.filter_by(uid=int(session['user_id'])).all()
     return render_template('transactions.html', transactions=transactions)
+
+@app.route('/transactions/delete/<int:id>', methods=['POST'])
+def delete_trac(id):
+    transaction = Transaction.query.get_or_404(id)
+    db.session.delete(transaction)
+    db.session.commit()
+    return redirect(url_for('transactions'))
 
 if __name__=='__main__':
     app.run(host='0.0.0.0',debug=True)

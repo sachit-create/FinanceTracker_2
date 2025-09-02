@@ -67,16 +67,14 @@ content %}
     </div>
 
     <div class="h-full w-1/5 flex items-center justify-around">
-      <button
+     <!-- <button
         class="bg-blue-600 border-none p-0.5 rounded-lg cursor-pointer hover:bg-blue-500 focus:bg-white"
       >
         EDIT
-      </button>
-      <button
-        class="bg-red-600 border-none p-0.5 rounded-lg cursor-pointer hover:bg-red-500 focus:bg-white"
-      >
-        DELETE
-      </button>
+      </button>-->
+      <form action="{{url_for('delete_trac',id=txn.tid)}}" method="POST">
+        <input type="submit" value="DELETE" class="bg-red-600 border-none p-0.5 rounded-lg cursor-pointer hover:bg-red-500 focus:bg-white">
+      </form>
     </div>
   </li>
   {% endfor %}
