@@ -5,6 +5,12 @@ content %}
 >
   Your Transactions
 </h2>
+
+{% if transactions|length == 0 %}
+   <div class="h-100 w-full flex items-center justify-center">
+     <h1 class="text-4xl border-b-4 pb-3">You have no transactions <a href="{{url_for('home')}}" class="text-white hover:text-gray-500 focus:text-gray-500">Home ?</a></h1>
+   </div>
+{% else %}
 <div class="bg-black text-white h-15 w-full flex items-center justify-around text-3xl border-t-2">
   <input type="text" name="description" placeholder="Description">
 
@@ -80,4 +86,5 @@ content %}
   {% endfor %}
 </ul>
 
+{% endif %}
 {% endblock %}
