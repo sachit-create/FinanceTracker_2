@@ -19,6 +19,7 @@
 - flask bcrypt
 - jinja templates
 - tailwind css -  ```cli``` 
+- ```chart.js``` for visulization
 
 # Data Storing
 > This is an learn time project so, I have used less 

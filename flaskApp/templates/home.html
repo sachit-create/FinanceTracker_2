@@ -92,9 +92,38 @@ content %}
   </section>
   <!--Charts-->
   <section class="col-span-1 row-span-2 flex items-center justify-center">
-    <div class="h-70 w-140 bg-black rounded-lg">
+    <div class="h-70 w-140 bg-black rounded-lg flex flex-col items-center">
       <!--Visuals here-->
-      <h2>Income vs Expenses</h2>
+      <div class="h-10 w-full bg-gradient-to-l from-black to-gray-600 flex items-center justify-center text-2xl
+      rounded-t-lg">
+        <h2>Income vs Expenses</h2>
+      </div>
+      <div class="h-60 w-120 flex items-center justify-center">
+        <canvas id="financeChart" class="bg-black"></canvas>
+      </div>
+
+      <script>
+        // Data from Flask
+        const income = {{ income }};
+        const expense = {{ expense }};
+        const balance = {{ balance }};
+
+        const ctx = document.getElementById('financeChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Income', 'Expense', 'Balance'],  // just fixed categories
+            datasets: [{
+              label: 'Amount',
+              data: [income, expense, balance],
+              backgroundColor: ['green', 'red', 'blue']
+            }]
+          },
+          options: {
+            responsive: true,
+          }
+        });
+      </script>
     </div>
   </section>
 </main>
