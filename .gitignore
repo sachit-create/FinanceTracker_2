@@ -1,3 +1,27 @@
 schedulling.txt
-output.css
-node_modules
+
+# Virtual environment
+myenv/
+venv/
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Local database / instance folder
+instance/
+*.db
+*.sqlite3
+
+# Node.js
+node_modules/
+package-lock.json
+
+# System / IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+*.swo
