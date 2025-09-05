@@ -1,6 +1,6 @@
 from flask import Flask , render_template , request , redirect , url_for , session , flash
 from flask_migrate import Migrate
-from flaskApp.models import db , User , Transaction
+from models import db , User , Transaction
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func 
 import os
@@ -9,7 +9,12 @@ app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+db_url = os.environ.get("DATABASE_URL")
+
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///finance.db'
