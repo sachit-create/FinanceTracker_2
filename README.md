@@ -26,5 +26,5 @@
   protection to data in this project with updates i 
   data encryption will improve.
 - flask session 
-- sqlite 
+- sqlite (for deployment using postgresql)
 - some python data structures
