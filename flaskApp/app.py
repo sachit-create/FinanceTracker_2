@@ -1,6 +1,6 @@
 from flask import Flask , render_template , request , redirect , url_for , session , flash
 from flask_migrate import Migrate
-from flaskApp.models import db , User , Transaction
+from models import db , User , Transaction
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func 
 import os
