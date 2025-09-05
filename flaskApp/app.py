@@ -4,6 +4,7 @@ from models import db , User , Transaction
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func 
 import os
+
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
@@ -114,5 +115,6 @@ def delete_trac(id):
     db.session.commit()
     return redirect(url_for('transactions'))
 
-if __name__=='__main__':
-    app.run(host='0.0.0.0',debug=True)
+if __name__ == "__main__":
+    app.run(debug=False)
+
