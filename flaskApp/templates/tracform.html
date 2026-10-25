@@ -1,41 +1,28 @@
-{% extends "base.html" %} {% block title %} AddTrac Page {% endblock %} {% block
-content %}
-<main class="w-full h-screen flex flex-col items-center gap-10">
-  <h1 class="mt-5 text-4xl bg-white p-5 rounded-lg">Add Transactions</h1>
-  <form
-    action="/addtrac"
-    method="POST"
-    class="h-120 w-100 border-2 rounded-2xl flex flex-col items-center justify-around"
-  >
-    <input
-      type="text"
-      name="amount"
-      placeholder="Amount : "
-      required
-      class="bg-white outline-none h-15 w-80 text-black pl-4 text-3xl rounded-2xl"
-      maxlength=10
-    />
-    <input
-      type="text"
-      name="description"
-      placeholder="Description : "
-      required
-      class="bg-white outline-none h-15 w-80 text-black pl-4 text-3xl rounded-2xl"
-    />
-    <select
-      name="type"
-      required
-      class="bg-white outline-none h-15 w-80 text-black pl-4 text-3xl rounded-2xl"
-    >
-      <option value="credit"
-        class="bg-green-600"
-      >Credit</option>
-      <option value="debit"
-        class="bg-red-600"
-      >Debit</option>
-    </select>
-    <input type="submit" class="bg-black text-white
-    h-12 w-40 rounded-xl border-3 transition-colors duration-200 border-white hover:border-blue-700 focus:border-pink-500"/>
-  </form>
-</main>
+{% extends "base.html" %}
+
+{% block title %}Add Transaction{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h2>Add transaction</h2>
+    <p class="auth-subtitle">Record income or expense</p>
+
+    <form method="POST" class="form-grid">
+      <input class="form-field" type="number" name="amount" step="0.01" min="0.01" placeholder="Amount" required>
+      <input class="form-field" type="text" name="description" placeholder="Description" required>
+      <select class="form-field" name="type" required>
+        <option value="credit">Credit (Income)</option>
+        <option value="debit">Debit (Expense)</option>
+      </select>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Save transaction</button>
+      </div>
+    </form>
+
+    <p class="auth-switch">
+      <a href="{{ url_for('home') }}">Back to dashboard</a>
+    </p>
+  </div>
+</div>
 {% endblock %}

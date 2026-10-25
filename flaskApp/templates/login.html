@@ -1,51 +1,34 @@
-{% extends "base.html" %} {% block title %}Login Page{% endblock %} {% block
-content %}
-<header class="h-30 bg-white flex items-center justify-center">
-  <h1 class="text-3xl text-amber underline">FINANCE TRACKER 2.0</h1>
-</header>
+{% extends "base.html" %}
 
-<main class="h-100 w-full flex items-center justify-center">
-  <section
-    class="border-2 h-80 w-100 flex flex-col items-center rounded-2xl shadow-2xl"
-  >
-    <form class="flex flex-col items-center justify-center" method="POST">
-      <input
-        class="h-15 w-80 border-b-2 outline-none pl-2 mt-4 text-2xl shadow-2xl"
-        type="text"
-        name="username"
-        placeholder="Username"
-        required="required"
-      /><br />
+{% block title %}Login{% endblock %}
 
-      <input
-        class="h-15 w-80 border-b-2 outline-none pl-2 mt-4 text-2xl shadow-2xl"
-        type="password"
-        name="password"
-        placeholder="Password"
-        required="required"
-      /><br />
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h2>Finance Tracker 2.0</h2>
+    <p class="auth-subtitle">Sign in to manage your money</p>
 
-      <button
-        class="bg-blue-700 h-10 w-30 rounded-xl text-lg cursor-pointer hover:bg-amber-50"
-      >
-        LOGIN</button
-      ><br />
+    <form method="POST" class="form-grid">
+      <input class="form-field" type="text" name="username" placeholder="Username" required>
+      <input class="form-field" type="password" name="password" placeholder="Password" required>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Login</button>
+      </div>
     </form>
 
-    <p>
-      Dont have an account ?
-      <a href="{{url_for('register')}}" class="underline text-blue-950 text-xl"
-        >Register</a
-      >
+    <p class="auth-switch">
+      Don’t have an account? <a href="{{ url_for('register') }}">Register</a>
     </p>
-  </section>
-</main>
 
-{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
-%}
-<ul class="flashes">
-  {% for category, message in messages %}
-  <li class="{{ category }}">{{ message }}</li>
-  {% endfor %}
-</ul>
-{% endif %} {% endwith %} {% endblock %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flash-messages">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  </div>
+</div>
+{% endblock %}

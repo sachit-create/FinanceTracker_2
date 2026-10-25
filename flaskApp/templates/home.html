@@ -1,137 +1,110 @@
-{% extends "base.html" %} {% block title %}Home Page{% endblock %} {% block
-content %}
-<header
-  class="bg-black h-32 w-full flex items-center justify-between text-white min-w-[360px]"
->
-  <div class="h-full w-1/2 flex items-center justify-start">
-    <h1 class="ml-10 text-4xl text-blue-700">Hello,</h1>
-    <h2 class="text-3xl text-pink-400">&nbsp;{{msg}} !</h2>
-  </div>
-  <nav class="h-full w-1/2 flex items-center justify-around text-xl">
-    <a
-      class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600"
-      href="{{url_for('addtrac')}}"
-      >Add Transaction</a
-    >
-    <a
-      class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600"
-      href="{{url_for('transactions')}}"
-      >Transactions</a
-    >
-    <a
-      class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600"
-      href="{{url_for('logout')}}"
-      >Logout</a
-    >
-    <a
-      class="text-blue-700 pb-2 border-b-4 border-black transition duration-150 hover:border-pink-600"
-      href=""
-      >Setting</a
-    >
-  </nav>
-</header>
+{% extends "base.html" %}
 
-<main
-  class="h-115 w-full grid grid-cols-2 grid-rows-3 gap-2 text-white min-w-[360px] bg-no-repeat"
->
-  <!--summary area-->
-  <section class="col-span-2 row-span-1 flex items-center justify-center">
-    <div
-      class="h-20 w-300 bg-gradient-to-r from-black to-gray-600 rounded-full flex items-center justify-around"
-    >
-      <div class="w-100">
-        <p class="text-blue-700 text-2xl ml-10">Balance : {{balance}}</p>
-      </div>
-      <div class="w-100">
-        <p class="text-pink-400 text-4xl mb-2 ml-10">Income : {{income}}</p>
-      </div>
-      <div class="w-100">
-        <p class="text-blue-700 text-2xl ml-20">Expense : {{expense}}</p>
-      </div>
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">F</span>
+      Finance Tracker
     </div>
-  </section>
-  <!--recent 5 transactions-->
-  <section class="col-span-1 row-span-2 flex items-center justify-center">
-    <div class="h-70 w-140 bg-black rounded-lg flex flex-col items-center">
-      {% if recent_5|length == 0 %}
-      <div class="h-70 w-140 flex justify-center items-center text-2xl">
-        <h1>You have no recent transactions</h1>
+
+    <nav class="nav-links">
+      <a class="nav-link active" href="{{ url_for('home') }}">Dashboard</a>
+      <a class="nav-link" href="{{ url_for('transactions') }}">Transactions</a>
+      <a class="nav-link" href="{{ url_for('addtrac') }}">Add Transaction</a>
+      <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+  </aside>
+
+  <main class="content-area">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Overview</p>
+        <h1>Hello, {{ msg }}!</h1>
       </div>
-      {% else %}
-      <p class="text-2xl mt-2">RECENT TRANSACTIONS</p>
-      <ul class="h-70 w-140 flex flex-col justify-start items-center">
-        <li
-          class="h-10 w-full flex items-center justify-around border-b-2 border-t-2 border-white text-2xl"
-        >
-          <div class="w-1/3 flex items-center justify-center">Type</div>
-          <div class="w-1/3">Description</div>
-          <div class="w-1/3">Amount</div>
-        </li>
-        {% for ele in recent_5%}
-        <li
-          class="h-10 w-full flex items-center justify-around border-b-2 border-white"
-        >
-          <div class="w-1/3 flex items-center justify-center">
-            {% if ele.type == "credit" %}
-            <div class="text-green-500">{{ele.type.upper()}}</div>
-            {% else %}
-            <div class="text-red-500">{{ele.type.upper()}}</div>
-            {% endif %}
-          </div>
-          {% if ele.description|length <= 15 %}
-          <div class="w-1/3">{{ ele.description.upper() }}</div>
-          {% else %}
-          <div class="w-1/3">{{ ele.description.upper()[0:16] }}...</div>
-          {% endif %}
-          <div class="w-1/3">&#8377;{{ ele.amount }}</div>
-        </li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-    </div>
-  </section>
-  <!--Charts-->
-  <section class="col-span-1 row-span-2 flex items-center justify-center">
-    <div class="h-70 w-140 bg-black rounded-lg flex flex-col items-center">
-      <!--Visuals here-->
-      <div class="h-10 w-full bg-gradient-to-l from-black to-gray-600 flex items-center justify-center text-2xl
-      rounded-t-lg">
-        <h2>Income vs Expenses</h2>
+      <a class="btn btn-primary" href="{{ url_for('addtrac') }}">+ Add Transaction</a>
+    </header>
+
+    <section class="summary-grid">
+      <div class="summary-card balance">
+        <small>Balance</small>
+        <strong>₹{{ '%.2f'|format(balance) }}</strong>
       </div>
-      <div class="h-60 w-120 flex items-center justify-center">
-        <canvas id="financeChart" class="bg-black"></canvas>
+      <div class="summary-card income">
+        <small>Income</small>
+        <strong>₹{{ '%.2f'|format(income) }}</strong>
+      </div>
+      <div class="summary-card expense">
+        <small>Expense</small>
+        <strong>₹{{ '%.2f'|format(expense) }}</strong>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Recent transactions</h3>
+          <a href="{{ url_for('transactions') }}" class="btn btn-secondary">View all</a>
+        </div>
+
+        {% if recent_5 %}
+        <ul class="transaction-list list-unstyled">
+          {% for transaction in recent_5 %}
+          <li class="transaction-item">
+            <span class="type-pill {% if transaction.type == 'credit' %}type-credit{% else %}type-debit{% endif %}">
+              {{ transaction.type }}
+            </span>
+            <div>
+              <div>{{ transaction.description }}</div>
+              <small>{{ transaction.created_at.date() }}</small>
+            </div>
+            <div class="transaction-amount">₹{{ '%.2f'|format(transaction.amount) }}</div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-state">No recent transactions yet.</div>
+        {% endif %}
       </div>
 
-      <script>
-        // Data from Flask
-        const income = {{ income }};
-        const expense = {{ expense }};
-        const balance = {{ balance }};
+      <div class="panel chart-wrap">
+        <div class="panel-header">
+          <h3>Analytics</h3>
+        </div>
+        <canvas id="financeChart" height="220"></canvas>
+      </div>
+    </section>
+  </main>
+</div>
 
-        const ctx = document.getElementById('financeChart').getContext('2d');
-        new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: ['Income', 'Expense', 'Balance'],  // just fixed categories
-            datasets: [{
-              label: 'Amount',
-              data: [income, expense, balance],
-              backgroundColor: ['green', 'red', 'blue']
-            }]
-          },
-          options: {
-            responsive: true,
+<script>
+  const income = {{ income }};
+  const expense = {{ expense }};
+  const balance = {{ balance }};
+
+  const ctx = document.getElementById('financeChart');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Income', 'Expense', 'Balance'],
+      datasets: [{
+        data: [income, expense, balance],
+        backgroundColor: ['#34d399', '#f87171', '#67e8f9'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            color: '#edf5ff'
           }
-        });
-      </script>
-    </div>
-  </section>
-</main>
-
-<footer
-  class="bg-black w-full h-13.5 text-white flex items-center justify-around min-w-[360px]"
->
-  <h1 class="border-l-4 border-l-gray-300 pl-2">@Sachit-Create-Coorporation</h1>
-  <h1 class="border-l-4 border-l-gray-300 pl-2">&copy; All Rights Reserved</h1>
-</footer>
+        }
+      }
+    }
+  });
+</script>
 {% endblock %}
