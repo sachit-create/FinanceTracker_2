@@ -10,16 +10,14 @@
     <nav class="nav-links" aria-label="Main navigation">
       <a class="nav-link" href="{{ url_for('home') }}"><span class="nav-icon" aria-hidden="true">⌂</span>Dashboard</a>
       <a class="nav-link active" href="{{ url_for('transactions') }}"><span class="nav-icon" aria-hidden="true">▤</span>Transactions</a>
+      <a class="nav-link" href="{{ url_for('summary') }}"><span class="nav-icon" aria-hidden="true">✦</span>Smart summary</a>
       <a class="nav-link" href="{{ url_for('addtrac') }}"><span class="nav-icon" aria-hidden="true">＋</span>Add transaction</a>
     </nav>
     <div class="sidebar-bottom"><a class="nav-link logout-link" href="{{ url_for('logout') }}"><span class="nav-icon" aria-hidden="true">↪</span>Sign out</a></div>
   </aside>
 
   <main class="content-area">
-    <header class="topbar">
-      <div><p class="eyebrow">Your financial activity</p><h1>Transactions</h1><p class="page-subtitle">A complete history of your income and expenses.</p></div>
-      <a class="btn btn-primary" href="{{ url_for('addtrac') }}"><span aria-hidden="true">＋</span> Add transaction</a>
-    </header>
+    <header class="topbar"><div><p class="eyebrow">Your financial activity</p><h1>Transactions</h1><p class="page-subtitle">A complete history of your income and expenses.</p></div><a class="btn btn-primary" href="{{ url_for('addtrac') }}"><span aria-hidden="true">＋</span> Add transaction</a></header>
     <section class="panel transactions-panel">
       <div class="panel-header"><div><p class="section-kicker">Your records</p><h2>All transactions</h2></div><span class="record-count">{{ transactions|length }} total</span></div>
       {% if transactions %}
@@ -27,19 +25,11 @@
         <thead><tr><th>Transaction</th><th>Type</th><th>Date</th><th class="amount-column">Amount</th><th><span class="sr-only">Action</span></th></tr></thead>
         <tbody>
           {% for txn in transactions %}
-          <tr>
-            <td><div class="table-description"><span class="transaction-symbol {% if txn.type == 'credit' %}symbol-credit{% else %}symbol-debit{% endif %}" aria-hidden="true">{% if txn.type == 'credit' %}↓{% else %}↑{% endif %}</span><span>{{ txn.description }}</span></div></td>
-            <td><span class="type-pill {% if txn.type == 'credit' %}type-credit{% else %}type-debit{% endif %}">{% if txn.type == 'credit' %}Income{% else %}Expense{% endif %}</span></td>
-            <td class="date-cell">{{ txn.created_at.date() }}</td>
-            <td class="amount-column {% if txn.type == 'credit' %}amount-credit{% else %}amount-debit{% endif %}">{% if txn.type == 'credit' %}+{% else %}−{% endif %}₹{{ '%.2f'|format(txn.amount) }}</td>
-            <td><form action="{{ url_for('delete_trac', id=txn.tid) }}" method="POST"><button class="icon-button" type="submit" aria-label="Delete {{ txn.description }}" title="Delete transaction">×</button></form></td>
-          </tr>
+          <tr><td><div class="table-description"><span class="transaction-symbol {% if txn.type == 'credit' %}symbol-credit{% else %}symbol-debit{% endif %}" aria-hidden="true">{% if txn.type == 'credit' %}↓{% else %}↑{% endif %}</span><span>{{ txn.description }}</span></div></td><td><span class="type-pill {% if txn.type == 'credit' %}type-credit{% else %}type-debit{% endif %}">{% if txn.type == 'credit' %}Income{% else %}Expense{% endif %}</span></td><td class="date-cell">{{ txn.created_at.date() }}</td><td class="amount-column {% if txn.type == 'credit' %}amount-credit{% else %}amount-debit{% endif %}">{% if txn.type == 'credit' %}+{% else %}−{% endif %}₹{{ '%.2f'|format(txn.amount) }}</td><td><form action="{{ url_for('delete_trac', id=txn.tid) }}" method="POST"><button class="icon-button" type="submit" aria-label="Delete {{ txn.description }}" title="Delete transaction">×</button></form></td></tr>
           {% endfor %}
         </tbody>
       </table></div>
-      {% else %}
-      <div class="empty-state"><span class="empty-icon" aria-hidden="true">▤</span><h3>No transactions yet</h3><p>Your income and expenses will appear here once you add them.</p><a class="btn btn-primary" href="{{ url_for('addtrac') }}">Add your first transaction</a></div>
-      {% endif %}
+      {% else %}<div class="empty-state"><span class="empty-icon" aria-hidden="true">▤</span><h3>No transactions yet</h3><p>Your income and expenses will appear here once you add them.</p><a class="btn btn-primary" href="{{ url_for('addtrac') }}">Add your first transaction</a></div>{% endif %}
     </section>
   </main>
 </div>

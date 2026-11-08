@@ -14,6 +14,7 @@
     <nav class="nav-links" aria-label="Main navigation">
       <a class="nav-link active" href="{{ url_for('home') }}"><span class="nav-icon" aria-hidden="true">⌂</span>Dashboard</a>
       <a class="nav-link" href="{{ url_for('transactions') }}"><span class="nav-icon" aria-hidden="true">▤</span>Transactions</a>
+      <a class="nav-link" href="{{ url_for('summary') }}"><span class="nav-icon" aria-hidden="true">✦</span>Smart summary</a>
       <a class="nav-link" href="{{ url_for('addtrac') }}"><span class="nav-icon" aria-hidden="true">＋</span>Add transaction</a>
     </nav>
 
@@ -34,48 +35,23 @@
     </header>
 
     <section class="summary-grid" aria-label="Account summary">
-      <article class="summary-card balance">
-        <div class="metric-heading"><span class="metric-icon balance-icon" aria-hidden="true">₹</span><small>Total balance</small></div>
-        <strong>₹{{ '%.2f'|format(balance) }}</strong>
-        <p class="metric-note">Across your recorded transactions</p>
-      </article>
-      <article class="summary-card income">
-        <div class="metric-heading"><span class="metric-icon income-icon" aria-hidden="true">↙</span><small>Total income</small></div>
-        <strong>₹{{ '%.2f'|format(income) }}</strong>
-        <p class="metric-note">Money added to your account</p>
-      </article>
-      <article class="summary-card expense">
-        <div class="metric-heading"><span class="metric-icon expense-icon" aria-hidden="true">↗</span><small>Total expenses</small></div>
-        <strong>₹{{ '%.2f'|format(expense) }}</strong>
-        <p class="metric-note">Money spent so far</p>
-      </article>
+      <article class="summary-card balance"><div class="metric-heading"><span class="metric-icon balance-icon" aria-hidden="true">₹</span><small>Total balance</small></div><strong>₹{{ '%.2f'|format(balance) }}</strong><p class="metric-note">Across your recorded transactions</p></article>
+      <article class="summary-card income"><div class="metric-heading"><span class="metric-icon income-icon" aria-hidden="true">↙</span><small>Total income</small></div><strong>₹{{ '%.2f'|format(income) }}</strong><p class="metric-note">Money added to your account</p></article>
+      <article class="summary-card expense"><div class="metric-heading"><span class="metric-icon expense-icon" aria-hidden="true">↗</span><small>Total expenses</small></div><strong>₹{{ '%.2f'|format(expense) }}</strong><p class="metric-note">Money spent so far</p></article>
     </section>
 
     <section class="dashboard-grid">
       <article class="panel">
-        <div class="panel-header">
-          <div><p class="section-kicker">Latest activity</p><h2>Recent transactions</h2></div>
-          <a href="{{ url_for('transactions') }}" class="text-link">View all <span aria-hidden="true">→</span></a>
-        </div>
+        <div class="panel-header"><div><p class="section-kicker">Latest activity</p><h2>Recent transactions</h2></div><a href="{{ url_for('transactions') }}" class="text-link">View all <span aria-hidden="true">→</span></a></div>
         {% if recent_5 %}
         <ul class="transaction-list list-unstyled">
           {% for transaction in recent_5 %}
-          <li class="transaction-item">
-            <span class="transaction-symbol {% if transaction.type == 'credit' %}symbol-credit{% else %}symbol-debit{% endif %}" aria-hidden="true">{% if transaction.type == 'credit' %}↓{% else %}↑{% endif %}</span>
-            <div class="transaction-description"><div>{{ transaction.description }}</div><small>{{ transaction.created_at.date() }}</small></div>
-            <div class="transaction-amount {% if transaction.type == 'credit' %}amount-credit{% else %}amount-debit{% endif %}">{% if transaction.type == 'credit' %}+{% else %}−{% endif %}₹{{ '%.2f'|format(transaction.amount) }}</div>
-          </li>
+          <li class="transaction-item"><span class="transaction-symbol {% if transaction.type == 'credit' %}symbol-credit{% else %}symbol-debit{% endif %}" aria-hidden="true">{% if transaction.type == 'credit' %}↓{% else %}↑{% endif %}</span><div class="transaction-description"><div>{{ transaction.description }}</div><small>{{ transaction.created_at.date() }}</small></div><div class="transaction-amount {% if transaction.type == 'credit' %}amount-credit{% else %}amount-debit{% endif %}">{% if transaction.type == 'credit' %}+{% else %}−{% endif %}₹{{ '%.2f'|format(transaction.amount) }}</div></li>
           {% endfor %}
         </ul>
-        {% else %}
-        <div class="empty-state"><span class="empty-icon" aria-hidden="true">▤</span><h3>Your activity will show up here</h3><p>Add your first transaction to get started.</p><a class="btn btn-secondary" href="{{ url_for('addtrac') }}">Add a transaction</a></div>
-        {% endif %}
+        {% else %}<div class="empty-state"><span class="empty-icon" aria-hidden="true">▤</span><h3>Your activity will show up here</h3><p>Add your first transaction to get started.</p><a class="btn btn-secondary" href="{{ url_for('addtrac') }}">Add a transaction</a></div>{% endif %}
       </article>
-
-      <article class="panel chart-panel">
-        <div class="panel-header"><div><p class="section-kicker">At a glance</p><h2>Income &amp; expenses</h2></div></div>
-        {% if income or expense %}<div class="chart-wrap"><canvas id="financeChart" aria-label="Income compared with expenses" role="img"></canvas></div>{% else %}<div class="chart-empty"><span class="chart-placeholder" aria-hidden="true">◔</span><p>Your chart will appear once you add activity.</p></div>{% endif %}
-      </article>
+      <article class="panel chart-panel"><div class="panel-header"><div><p class="section-kicker">At a glance</p><h2>Income &amp; expenses</h2></div></div>{% if income or expense %}<div class="chart-wrap"><canvas id="financeChart" aria-label="Income compared with expenses" role="img"></canvas></div>{% else %}<div class="chart-empty"><span class="chart-placeholder" aria-hidden="true">◔</span><p>Your chart will appear once you add activity.</p></div>{% endif %}</article>
     </section>
   </main>
 </div>
@@ -84,22 +60,10 @@
 <script>
   const income = {{ income|tojson }};
   const expense = {{ expense|tojson }};
-  const chartCanvas = document.getElementById('financeChart');
-  new Chart(chartCanvas, {
+  new Chart(document.getElementById('financeChart'), {
     type: 'doughnut',
-    data: {
-      labels: ['Income', 'Expenses'],
-      datasets: [{ data: [income, expense], backgroundColor: ['#188038', '#d93025'], borderWidth: 0, hoverOffset: 5 }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '72%',
-      plugins: {
-        legend: { position: 'bottom', labels: { color: '#5f6368', usePointStyle: true, pointStyle: 'circle', padding: 22, font: { family: 'DM Sans', size: 12 } } },
-        tooltip: { callbacks: { label: (context) => ` ${context.label}: ₹${Number(context.raw).toLocaleString('en-IN', { minimumFractionDigits: 2 })}` } }
-      }
-    }
+    data: { labels: ['Income', 'Expenses'], datasets: [{ data: [income, expense], backgroundColor: ['#188038', '#d93025'], borderWidth: 0, hoverOffset: 5 }] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '72%', plugins: { legend: { position: 'bottom', labels: { color: '#5f6368', usePointStyle: true, pointStyle: 'circle', padding: 22, font: { family: 'DM Sans', size: 12 } } }, tooltip: { callbacks: { label: (context) => ` ${context.label}: ₹${Number(context.raw).toLocaleString('en-IN', { minimumFractionDigits: 2 })}` } } } }
   });
 </script>
 {% endif %}
