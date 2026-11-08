@@ -1,9 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="system">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f8fafd">
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem('finance-tracker-theme');
+        if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system') {
+          document.documentElement.dataset.theme = savedTheme;
+        }
+      } catch (error) {
+        document.documentElement.dataset.theme = 'system';
+      }
+    }());
+  </script>
   <title>{% block title %}Finance Tracker{% endblock %} · Finance Tracker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +24,34 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <div class="theme-control">
+    <label class="sr-only" for="theme-select">Color theme</label>
+    <span class="theme-control-icon" aria-hidden="true">◐</span>
+    <select id="theme-select" aria-label="Color theme">
+      <option value="system">System</option>
+      <option value="light">White</option>
+      <option value="dark">Dark</option>
+    </select>
+  </div>
   {% block content %}{% endblock %}
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var selector = document.getElementById('theme-select');
+      var validThemes = ['system', 'light', 'dark'];
+      var currentTheme = validThemes.indexOf(root.dataset.theme) !== -1 ? root.dataset.theme : 'system';
+
+      selector.value = currentTheme;
+      selector.addEventListener('change', function () {
+        var selectedTheme = validThemes.indexOf(selector.value) !== -1 ? selector.value : 'system';
+        root.dataset.theme = selectedTheme;
+        try {
+          localStorage.setItem('finance-tracker-theme', selectedTheme);
+        } catch (error) {
+          // Theme remains active for this page even when storage is unavailable.
+        }
+      });
+    }());
+  </script>
 </body>
 </html>
