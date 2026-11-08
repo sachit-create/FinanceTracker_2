@@ -1,28 +1,32 @@
 {% extends "base.html" %}
 
-{% block title %}Add Transaction{% endblock %}
+{% block title %}Add transaction{% endblock %}
 
 {% block content %}
-<div class="auth-wrapper">
-  <div class="auth-card">
-    <h2>Add transaction</h2>
-    <p class="auth-subtitle">Record income or expense</p>
-
-    <form method="POST" class="form-grid">
-      <input class="form-field" type="number" name="amount" step="0.01" min="0.01" placeholder="Amount" required>
-      <input class="form-field" type="text" name="description" placeholder="Description" required>
-      <select class="form-field" name="type" required>
-        <option value="credit">Credit (Income)</option>
-        <option value="debit">Debit (Expense)</option>
-      </select>
-      <div class="form-actions">
-        <button class="btn btn-primary" type="submit">Save transaction</button>
-      </div>
-    </form>
-
-    <p class="auth-switch">
-      <a href="{{ url_for('home') }}">Back to dashboard</a>
-    </p>
-  </div>
+<div class="page-shell">
+  <aside class="sidebar">
+    <a class="brand" href="{{ url_for('home') }}" aria-label="Finance Tracker home"><span class="brand-mark" aria-hidden="true">F</span><span>Finance <span class="brand-light">Tracker</span></span></a>
+    <p class="nav-caption">Workspace</p>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a class="nav-link" href="{{ url_for('home') }}"><span class="nav-icon" aria-hidden="true">⌂</span>Dashboard</a>
+      <a class="nav-link" href="{{ url_for('transactions') }}"><span class="nav-icon" aria-hidden="true">▤</span>Transactions</a>
+      <a class="nav-link active" href="{{ url_for('addtrac') }}"><span class="nav-icon" aria-hidden="true">＋</span>Add transaction</a>
+    </nav>
+    <div class="sidebar-bottom"><a class="nav-link logout-link" href="{{ url_for('logout') }}"><span class="nav-icon" aria-hidden="true">↪</span>Sign out</a></div>
+  </aside>
+  <main class="content-area form-page-content">
+    <header class="page-heading"><p class="eyebrow">Keep your records up to date</p><h1>Add a transaction</h1><p class="page-subtitle">Record income or an expense to keep your finances in focus.</p></header>
+    <section class="panel transaction-form-panel">
+      <form method="POST" class="form-grid transaction-form">
+        <label class="field-label" for="amount">Amount</label>
+        <div class="amount-input"><span aria-hidden="true">₹</span><input class="form-field" id="amount" type="number" name="amount" step="0.01" min="0.01" placeholder="0.00" required></div>
+        <label class="field-label" for="description">Description</label>
+        <input class="form-field" id="description" type="text" name="description" placeholder="e.g. Monthly salary or groceries" required>
+        <label class="field-label" for="type">Transaction type</label>
+        <select class="form-field" id="type" name="type" required><option value="credit">Income</option><option value="debit">Expense</option></select>
+        <div class="form-actions"><a class="btn btn-secondary" href="{{ url_for('home') }}">Cancel</a><button class="btn btn-primary" type="submit">Save transaction</button></div>
+      </form>
+    </section>
+  </main>
 </div>
 {% endblock %}

@@ -1,34 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Sign in{% endblock %}
 
 {% block content %}
-<div class="auth-wrapper">
-  <div class="auth-card">
-    <h2>Finance Tracker 2.0</h2>
-    <p class="auth-subtitle">Sign in to manage your money</p>
-
-    <form method="POST" class="form-grid">
-      <input class="form-field" type="text" name="username" placeholder="Username" required>
-      <input class="form-field" type="password" name="password" placeholder="Password" required>
-      <div class="form-actions">
-        <button class="btn btn-primary" type="submit">Login</button>
-      </div>
-    </form>
-
-    <p class="auth-switch">
-      Don’t have an account? <a href="{{ url_for('register') }}">Register</a>
-    </p>
-
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class="flash-messages">
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-  </div>
-</div>
+<main class="auth-layout">
+  <section class="auth-intro">
+    <a class="brand auth-brand" href="{{ url_for('login') }}"><span class="brand-mark" aria-hidden="true">F</span><span>Finance <span class="brand-light">Tracker</span></span></a>
+    <div class="auth-message"><span class="auth-art" aria-hidden="true">₹</span><p class="eyebrow">A clearer view of your money</p><h1>Make every rupee<br>count.</h1><p>Keep your finances organized, understand your spending, and stay on top of what matters.</p></div>
+    <p class="auth-footnote">A simpler way to stay in control of your finances.</p>
+  </section>
+  <section class="auth-main">
+    <div class="auth-card">
+      <p class="section-kicker">Welcome back</p>
+      <h2>Sign in</h2>
+      <p class="auth-subtitle">Enter your details to continue to your account.</p>
+      <form method="POST" class="form-grid">
+        <label class="field-label" for="username">Username</label>
+        <input class="form-field" id="username" type="text" name="username" placeholder="Your username" autocomplete="username" required>
+        <label class="field-label" for="password">Password</label>
+        <input class="form-field" id="password" type="password" name="password" placeholder="Your password" autocomplete="current-password" required>
+        <button class="btn btn-primary auth-submit" type="submit">Continue <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="auth-switch">New to Finance Tracker? <a href="{{ url_for('register') }}">Create an account</a></p>
+      {% with messages = get_flashed_messages() %}{% if messages %}<ul class="flash-messages">{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>{% endif %}{% endwith %}
+    </div>
+  </section>
+</main>
 {% endblock %}

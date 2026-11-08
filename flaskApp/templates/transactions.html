@@ -5,68 +5,42 @@
 {% block content %}
 <div class="page-shell">
   <aside class="sidebar">
-    <div class="brand">
-      <span class="brand-mark">F</span>
-      Finance Tracker
-    </div>
-
-    <nav class="nav-links">
-      <a class="nav-link" href="{{ url_for('home') }}">Dashboard</a>
-      <a class="nav-link active" href="{{ url_for('transactions') }}">Transactions</a>
-      <a class="nav-link" href="{{ url_for('addtrac') }}">Add Transaction</a>
-      <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+    <a class="brand" href="{{ url_for('home') }}" aria-label="Finance Tracker home"><span class="brand-mark" aria-hidden="true">F</span><span>Finance <span class="brand-light">Tracker</span></span></a>
+    <p class="nav-caption">Workspace</p>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a class="nav-link" href="{{ url_for('home') }}"><span class="nav-icon" aria-hidden="true">⌂</span>Dashboard</a>
+      <a class="nav-link active" href="{{ url_for('transactions') }}"><span class="nav-icon" aria-hidden="true">▤</span>Transactions</a>
+      <a class="nav-link" href="{{ url_for('addtrac') }}"><span class="nav-icon" aria-hidden="true">＋</span>Add transaction</a>
     </nav>
+    <div class="sidebar-bottom"><a class="nav-link logout-link" href="{{ url_for('logout') }}"><span class="nav-icon" aria-hidden="true">↪</span>Sign out</a></div>
   </aside>
 
   <main class="content-area">
-    <div class="page-card">
-      <div class="page-header">
-        <div>
-          <p class="eyebrow">Records</p>
-          <h2>Transactions</h2>
-        </div>
-        <a class="btn btn-primary" href="{{ url_for('addtrac') }}">+ Add new</a>
-      </div>
-
+    <header class="topbar">
+      <div><p class="eyebrow">Your financial activity</p><h1>Transactions</h1><p class="page-subtitle">A complete history of your income and expenses.</p></div>
+      <a class="btn btn-primary" href="{{ url_for('addtrac') }}"><span aria-hidden="true">＋</span> Add transaction</a>
+    </header>
+    <section class="panel transactions-panel">
+      <div class="panel-header"><div><p class="section-kicker">Your records</p><h2>All transactions</h2></div><span class="record-count">{{ transactions|length }} total</span></div>
       {% if transactions %}
-      <div style="overflow-x:auto;">
-        <table class="transactions-table">
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Amount</th>
-              <th>Description</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for txn in transactions %}
-            <tr>
-              <td>
-                <span class="type-pill {% if txn.type == 'credit' %}type-credit{% else %}type-debit{% endif %}">
-                  {{ txn.type }}
-                </span>
-              </td>
-              <td>₹{{ '%.2f'|format(txn.amount) }}</td>
-              <td>{{ txn.description }}</td>
-              <td>{{ txn.created_at.date() }}</td>
-              <td>
-                <form action="{{ url_for('delete_trac', id=txn.tid) }}" method="POST">
-                  <button class="btn btn-danger" type="submit">Delete</button>
-                </form>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+      <div class="table-scroll"><table class="transactions-table">
+        <thead><tr><th>Transaction</th><th>Type</th><th>Date</th><th class="amount-column">Amount</th><th><span class="sr-only">Action</span></th></tr></thead>
+        <tbody>
+          {% for txn in transactions %}
+          <tr>
+            <td><div class="table-description"><span class="transaction-symbol {% if txn.type == 'credit' %}symbol-credit{% else %}symbol-debit{% endif %}" aria-hidden="true">{% if txn.type == 'credit' %}↓{% else %}↑{% endif %}</span><span>{{ txn.description }}</span></div></td>
+            <td><span class="type-pill {% if txn.type == 'credit' %}type-credit{% else %}type-debit{% endif %}">{% if txn.type == 'credit' %}Income{% else %}Expense{% endif %}</span></td>
+            <td class="date-cell">{{ txn.created_at.date() }}</td>
+            <td class="amount-column {% if txn.type == 'credit' %}amount-credit{% else %}amount-debit{% endif %}">{% if txn.type == 'credit' %}+{% else %}−{% endif %}₹{{ '%.2f'|format(txn.amount) }}</td>
+            <td><form action="{{ url_for('delete_trac', id=txn.tid) }}" method="POST"><button class="icon-button" type="submit" aria-label="Delete {{ txn.description }}" title="Delete transaction">×</button></form></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table></div>
       {% else %}
-      <div class="empty-state">
-        You don’t have any transactions yet. <a href="{{ url_for('addtrac') }}" style="color: var(--primary);">Add your first one</a>
-      </div>
+      <div class="empty-state"><span class="empty-icon" aria-hidden="true">▤</span><h3>No transactions yet</h3><p>Your income and expenses will appear here once you add them.</p><a class="btn btn-primary" href="{{ url_for('addtrac') }}">Add your first transaction</a></div>
       {% endif %}
-    </div>
+    </section>
   </main>
 </div>
 {% endblock %}
