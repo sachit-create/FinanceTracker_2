@@ -111,9 +111,27 @@ def addtrac():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        amount = float(request.form['amount'])
-        t_type = request.form['type']
-        desc = request.form['description'].strip() or 'General transaction'
+        raw_amount = request.form.get('amount', '').strip()
+        t_type = (request.form.get('type') or '').strip().lower()
+        desc = request.form.get('description', '').strip() or 'General transaction'
+
+        if not raw_amount:
+            flash("Please enter a transaction amount.")
+            return redirect(url_for('addtrac'))
+
+        try:
+            amount = float(raw_amount)
+        except ValueError:
+            flash("Amount must be a valid number.")
+            return redirect(url_for('addtrac'))
+
+        if amount <= 0:
+            flash("Amount must be greater than zero.")
+            return redirect(url_for('addtrac'))
+
+        if t_type not in {'credit', 'debit'}:
+            flash("Transaction type must be credit or debit.")
+            return redirect(url_for('addtrac'))
 
         txn = Transaction(
             uid=int(session['user_id']),

@@ -69,6 +69,29 @@ class TransactionFlowTests(unittest.TestCase):
             deleted_txn = Transaction.query.filter_by(tid=txn.tid).first()
             self.assertIsNone(deleted_txn)
 
+    def test_reject_invalid_transaction_input(self):
+        login_response = self.client.post(
+            "/login",
+            data={"username": "alice", "password": "secret"},
+            follow_redirects=True,
+        )
+        self.assertEqual(login_response.status_code, 200)
+
+        invalid_response = self.client.post(
+            "/addtrac",
+            data={
+                "amount": "-10",
+                "type": "credit",
+                "description": "Bad amount",
+            },
+            follow_redirects=True,
+        )
+        self.assertEqual(invalid_response.status_code, 200)
+        self.assertIn(b"greater than zero", invalid_response.data)
+
+        with app.app_context():
+            self.assertEqual(Transaction.query.count(), 0)
+
 
 if __name__ == "__main__":
     unittest.main()
