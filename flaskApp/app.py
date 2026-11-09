@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, Response
 from flask_migrate import Migrate
 from flaskApp.models import db, User, Transaction
 from sqlalchemy import func
 from pathlib import Path
 from datetime import date, timedelta
+import csv
+import io
 import os
 
 app = Flask(__name__)
@@ -262,6 +264,47 @@ def delete_trac(id):
     transaction = Transaction.query.filter_by(tid=id, uid=int(session['user_id'])).first_or_404()
     db.session.delete(transaction)
     db.session.commit()
+    return redirect(url_for('transactions'))
+
+
+@app.route('/settings/download-data')
+def download_data():
+    if "user_id" not in session:
+        return redirect(url_for('login'))
+
+    transactions = (
+        Transaction.query
+        .filter_by(uid=int(session['user_id']))
+        .order_by(Transaction.created_at.asc(), Transaction.tid.asc())
+        .all()
+    )
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['id', 'date', 'type', 'description', 'amount'])
+    for transaction in transactions:
+        writer.writerow([
+            transaction.tid,
+            transaction.created_at.isoformat() if transaction.created_at else '',
+            transaction.type,
+            transaction.description or '',
+            float(transaction.amount or 0),
+        ])
+
+    response = Response(output.getvalue(), mimetype='text/csv')
+    filename = f"{session['username']}_transactions.csv"
+    response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+
+@app.route('/settings/reset-data', methods=['POST'])
+def reset_data():
+    if "user_id" not in session:
+        return redirect(url_for('login'))
+
+    Transaction.query.filter_by(uid=int(session['user_id'])).delete()
+    db.session.commit()
+    flash('Your transaction data has been reset.')
     return redirect(url_for('transactions'))
 
 
